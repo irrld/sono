@@ -1,0 +1,80 @@
+{
+  "rules": {
+    "id": {
+      "$type": "Identifier"
+    },
+    "constant_value": {
+      "$or": [
+        {
+          "$type": "StringLiteral"
+        },
+        {
+          "$type": "Double"
+        },
+        {
+          "$type": "Float"
+        },
+        {
+          "$type": "Int32"
+        },
+        {
+          "$type": "Int64"
+        },
+        {
+          "$type": "Boolean"
+        }
+      ]
+    },
+    "compare_op": {"$or": ["==", "!=", "<", ">", "<=", ">="]},
+    "operator": {"$or": ["+", "-", "/", "*", "%", "==", "!=", "<", ">", "<=", ">="]},
+    "import": "import <id>",
+    "rvalue": {"$or": ["<id>", "<constant_value>", "<function_call>"]},
+    "lvalue": "<id>",
+    "value": {"$or": ["<id>", "<constant_value>", "<function_call>"]},
+    "function_call": "<id> ( <value> ) ;",
+    "compare_expr": "<value> <compare_op> <value>",
+    "expr": {
+      "$or": [
+        "<value>",
+        "<value> <operator> <value>"
+      ]
+    },
+    "assignment": "<lvalue> = <rvalue> ;",
+    "value_decl": "<id> <id> ;",
+    "value_def": "<id> <id> = <rvalue> ;",
+    "if": "if ( <compare_expr> ) { <?statement> }",
+    "while": "while ( <compare_expr> ) { <?statement> }",
+    "return": "return <expr> ;",
+    "statement": {
+      "$or": [
+        "<value_decl>",
+        "<value_def>",
+        "<assignment>",
+        "<if>",
+        "<while>",
+        "<return>",
+        "<function_call>"
+      ]
+    },
+    "parameter": "<id> <id>",
+    "parameter_split": ", <parameter>",
+    "parameters": {
+      "$or": [
+        "<parameter>",
+        "<parameter> <?parameter_split>"
+      ]
+    },
+    "function": "fun <id> ( <parameters> ) { <?statement> }",
+    "class": "class <id> { <?function> <?value_decl> <?value_def> }",
+    "program": {
+      "$or": [
+        "<?import>",
+        "<?function>",
+        "<?class>",
+        "<?value_decl>",
+        "<?value_def>"
+      ]
+    }
+  },
+  "start": "program"
+}
